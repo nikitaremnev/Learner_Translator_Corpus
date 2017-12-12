@@ -1,2 +1,2 @@
-# Learner_Translator_Corpus_of_L2_Russian_Speakers
+# Learner Translator Corpus of L2 Russian Speakers
 web-corpora.net/translator_corpus 
