@@ -1,5 +1,5 @@
 # coding=utf-8
-u"""Управление возможными url с префиксом /RLC/document-annotations"""
+u"""Управление возможными url с префиксом /translator_corpus/document-annotations"""
 
 from django.conf.urls import url
 

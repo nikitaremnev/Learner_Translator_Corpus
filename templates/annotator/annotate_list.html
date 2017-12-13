@@ -4,7 +4,7 @@
 {% load annotator_tags %}
 
 {% block title %}
-    {% trans 'Russian Learner Corpus Statistics' %}
+    {% trans 'Learner Translator Corpus Statistics' %}
 
 
 {% endblock %}
@@ -55,26 +55,26 @@ $( "#showbutton" ).click(function() {
                 });
 });
 
-        var cookie_annot = getCookie("RLC_annotated");
-        var cookie_notannot = getCookie("RLC_not_annotated");
-        var cookie_checked = getCookie("RLC_checked");
+        var cookie_annot = getCookie("LTC_annotated");
+        var cookie_notannot = getCookie("LTC_not_annotated");
+        var cookie_checked = getCookie("LTC_checked");
 
         if (cookie_annot != "") {$("#annotated").scrollTop(cookie_annot);}
         $("#annotated").scroll(function() {
            var scrollPos = $("#annotated").scrollTop();
-           setCookie("RLC_annotated", scrollPos, 1)
+           setCookie("LTC_annotated", scrollPos, 1)
         });
 
         if (cookie_notannot != "") {$("#not_annotated").scrollTop(cookie_notannot);}
         $("#not_annotated").scroll(function() {
            var scrollPos2 = $("#not_annotated").scrollTop();
-           setCookie("RLC_not_annotated", scrollPos2, 1)
+           setCookie("LTC_not_annotated", scrollPos2, 1)
         });
 
         if (cookie_checked != "") {$("#checked").scrollTop(cookie_checked );}
         $("#checked").scroll(function() {
            var scrollPos3 = $("#checked").scrollTop();
-           setCookie("RLC_checked", scrollPos3, 1)
+           setCookie("LTC_checked", scrollPos3, 1)
         });
 
     });

@@ -3,12 +3,18 @@ u"""Скрипты для обработки текста майстемом."""
 __author__ = 'esokur'
 import uuid
 import re
-# import HTMLParser
 import subprocess
 import codecs
 import os
 
-PATH_TO_MYSTEM = '/home/socur/mystem'
+from translator_corpus.settings import PROD, TEMPORARY_FILE_LOCATION
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+if PROD:
+    PATH_TO_MYSTEM = '/home/esokur/mystem'
+else:
+    PATH_TO_MYSTEM = '/home/socur/mystem'
+
 regSe = re.compile(u'<se>(.*?)</se>', flags=re.U | re.DOTALL)  # находит предложение в тэгах <se> </se>
 regWord = re.compile(u'^(.*?)<w>(.*?)(<ana.*/>)?</w>(.*)$', flags=re.U)  # находит слово в тэгах <w> </w>
 regAna = re.compile(u'<ana lex="(.*?)" gr="(.*?)" />', flags=re.U)  # находит разбор в тэгах <ana> </ana>
@@ -39,7 +45,7 @@ def mystem(text):
     """
     # todo почему-то не получается сразу передать текст в майстем.
     # todo приходится сначала записывать текст в файл, читать, и потом удалять его.
-    fname = '/home/socur/ptc/ptc/tempfiles/temp' + str(uuid.uuid4()) + '.txt'
+    fname = TEMPORARY_FILE_LOCATION + '/temp' + str(uuid.uuid4()) + '.txt'
     f = codecs.open(fname, 'w', 'utf-8')
     f.write(text.replace('\r\n', '\r').replace('\n', '\r'))
     f.close()

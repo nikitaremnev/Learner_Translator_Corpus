@@ -28,6 +28,7 @@ class Document(models.Model):
     Свойства текста:
     owner - пользователь, который добавил текст, связан с :models:`auth.User`
     created - дата и время, когда текст был добавлен
+    author_original - автор оригинального текста
     title - название текста, генерируется автоматически из жанра, типа текста и курса
     body_original - сам текст, если он был добавлен разметчиком вручную;
         если текст был перезалит из старой платформы, то в этом атрибуте хранится строка "loaded from xml"
@@ -105,6 +106,7 @@ class Document(models.Model):
          (u'adv', _(u'Advanced')) )
     owner = models.ForeignKey(User, on_delete=models.DO_NOTHING, blank=True, null=True, verbose_name=_(u'owner'), help_text=_(u"This is the corpus user who uploads the text to the corpus. Please, make sure that this field displays your login."))
     created = models.DateTimeField(auto_now_add=True, db_index=True)
+    author_original = models.CharField(max_length=250, db_index=True, null=True, blank=True, editable=True, verbose_name=_(u'author of the original text'))
     title = models.CharField(max_length=250, db_index=True, null=True, blank=True, editable=True, verbose_name=_(u'title'))
     body_original = models.TextField(help_text=_(u"Paste the original text here."), verbose_name=_(u'text'))  # HTML
     body_translated = models.TextField(help_text=_(u"Paste the translated text here."), verbose_name=_(u'text'))

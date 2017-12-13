@@ -3,7 +3,7 @@
 {% load staticfiles %}
 {% load i18n %}
 {% load annotator_tags %}
-{% block title %}{% trans 'Russian Learner Corpus Annotation' %}{% endblock %}
+{% block title %}{% trans 'Learner Translator Corpus Annotation' %}{% endblock %}
 {% block meta_content %}{% trans 'My annotations' %}{% endblock %}
 
 {% block scripts %}
@@ -29,7 +29,7 @@ $(document).ready(function(){
     $(".token[title*='bastard']").css( "text-decoration", "underline" );
 });
  function search(id) {
-$.get("/RLC/document-annotations/get_correction_by_id/"+id,
+$.get("/translator_corpus/document-annotations/get_correction_by_id/"+id,
                     function (data) {
                         $("#"+id+"+").html(data[1]);
                         $("#second"+id).html(data[0]);

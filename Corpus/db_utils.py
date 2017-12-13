@@ -1,12 +1,10 @@
 #  -- coding: utf8 --
-__author__ = 'eosokur'
+__author__ = 'esokur'
 
 import sqlite3 as mdb
 
 from translator_corpus.settings import DATABASES
 
-USER = DATABASES['default']['USER']
-PASSWORD = DATABASES['default']['PASSWORD']
 NAME = DATABASES['default']['NAME']
 
 

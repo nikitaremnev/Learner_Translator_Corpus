@@ -30,21 +30,16 @@ class OwnerFilter(admin.SimpleListFilter):
         return queryset.filter(owner__username=self.value())
 
 
-
 class LearnerCorpusAdminSite(AdminSite):
     site_header = 'Learner Translator Corpus of L2 Russian Speakers'
     site_title = 'Admin'
     index_title = 'LTC'
 
 
-# отображение новостных статей
-class ArticleAdmin(admin.ModelAdmin):
-    fields = ['date', 'text_eng', 'text_rus']  # в панели редактирования
-    list_display = ('date', 'text_eng', 'text_rus', 'created')  # в таблице
-
 class StarredAdmin(admin.ModelAdmin):
     fields = ['user', 'sentences']  # в панели редактирования
     list_display = ('user', 'sentences')  # в таблице
+
 
 # отображение секций стартовой страницы
 class SectionAdmin(admin.ModelAdmin):
@@ -55,7 +50,7 @@ class SectionAdmin(admin.ModelAdmin):
 # отображение информации о текстах корпуса
 class DocumentAdmin(admin.ModelAdmin):
     fieldsets = [  # в панели редактирования
-        (None,               {'fields': ['owner', 'title', 'body_original', 'body_translated', 'filename']}),
+        (None,               {'fields': ['owner', 'author_original', 'title', 'body_original', 'body_translated', 'filename']}),
         ('Author', {'fields':
                         [
                             ('author', 'gender', 'course'),
@@ -112,7 +107,5 @@ learner_admin.register(Document, DocumentAdmin)
 # learner_admin.register(Sentence)
 # learner_admin.register(Token, TokenAdmin)
 # learner_admin.register(Morphology, MorphAdmin)
-
-#learner_admin.register(Section, SectionAdmin)
 learner_admin.register(User, UserAdmin)
 learner_admin.register(Group, GroupAdmin)

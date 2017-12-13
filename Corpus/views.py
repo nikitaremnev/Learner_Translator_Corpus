@@ -124,7 +124,7 @@ class Search(Index):
                 # If page is out of range (e.g. 9999), deliver last page of results.
                 sents = paginator.page(paginator.num_pages)
             full_path = rePage.sub('', request.get_full_path())
-            PREFIX = 'RLC' if PROD else ''
+            PREFIX = 'translator_corpus' if PROD else ''
             d_path = full_path.replace(PREFIX + '/search/', PREFIX + '/search/download/')
             return render(request, 'search/result.html',
                                       {'query': word, 'result': sent_list, 'pages': sents,

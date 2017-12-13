@@ -2,7 +2,7 @@
 {% load staticfiles %}
 {% load i18n %}
 {% load annotator_tags %}
-{% block title %}{% trans 'Russian Learner Corpus Annotation' %}{% endblock %}
+{% block title %}{% trans 'Learner Translator Corpus Annotation' %}{% endblock %}
 {% block meta_content %}{% trans 'Annotation' %}{% endblock %}
 
 {% block scripts %}
@@ -206,6 +206,7 @@ $.get("{% url 'annotations:get.correction' '' %}" + id,
     <li>Construction
     <ul>
         <li>Constr <a href="#" data-toggle="popover" title="Неверный выбор конструкции или ошибка внутри конструкции (ошибка затрагивает выбор или форму более одной единицы или связана с пропуском/добавлением единицы)" style="color:lightgrey"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></a></li>
+        <li>Author <a href="#" data-toggle="popover" title="Ошибка в речи автора" style="color:lightgrey"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></a></li>
     </ul></li>
     <li>Lexis
     <ul>
@@ -218,6 +219,7 @@ $.get("{% url 'annotations:get.correction' '' %}" + id,
 	<li>Additional tags
 	<ul>
 	    <li>Transfer <a href="#" data-toggle="popover" title="Интерференция с L1" style="color:lightgrey"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></a></li>
+        <li>Non-transfer <a href="#" data-toggle="popover" title="Намеренное избегание интерференции с L1" style="color:lightgrey"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></a></li>
 		<li>Not-clear <a href="#" data-toggle="popover" title="По контексту невозможно восстановить смысл фразы и исправить ошибку" style="color:lightgrey"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></a></li>
 		<li>Miss <a href="#" data-toggle="popover" title="Пропуск буквы, морфемы или слова" style="color:lightgrey"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></a></li>
 		<li>Extra <a href="#" data-toggle="popover" title="Вставка ненужной элемента (буквы, морфемы или слова)" style="color:lightgrey"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></a> </li>

@@ -17,7 +17,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from annotator.admin import learner_admin
 from translator_corpus.views import start
-from Corpus.views import Search, download_file
+from Corpus.views import Search, download_file, PopUp
 
 admin.autodiscover()
 
@@ -27,4 +27,5 @@ urlpatterns = [
     url(r'^document-annotations/', include('annotator.urls', namespace='annotations')),
     url(r'^search/$', Search.as_view(), name='main.search'),
     url(r'^download_file/(?P<doc_id>[\w\-]+)/(?P<doc_type>ann|tokens|text)$', download_file, name='download_file'),
+    url(r'^search/(gramsel|lex|errsel)$', PopUp.as_view(), name='popup'),
 ]

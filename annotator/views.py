@@ -169,21 +169,21 @@ class Root(BaseStorageView):
                 for user in users:
                     doc_list2 += [ann.document.doc_id for ann in user.annotation_set.all()]
                     doc_list2 = list(set(doc_list2))
-                return render_to_response('annotator/annotate_list.html',
+                return render(request, 'annotator/annotate_list.html',
                                           {'docs': doc_list2,
                                            'langs':Document.NativeChoices,
                                            'users': User.objects.exclude(
-                                               username='admin').exclude(first_name='').order_by('last_name')},
-                                          context_instance=RequestContext(request))
+                                               username='admin').exclude(first_name='').order_by('last_name')}
+                                          )
             else:
                 langs = request.GET.keys()
                 doc_list = [doc for doc in Document.objects.all() if doc.native in langs]
-                return render_to_response('annotator/annotate_list.html',
+                return render(request, 'annotator/annotate_list.html',
                                           {'docs': doc_list,
                                            'langs':Document.NativeChoices,
                                            'users': User.objects.exclude(
-                                               username='admin').exclude(first_name='').order_by('last_name')},
-                                          context_instance=RequestContext(request))
+                                               username='admin').exclude(first_name='').order_by('last_name')}
+                                          )
 
 
 class Index(BaseStorageView):
@@ -301,9 +301,5 @@ def user_annotations(request):
     jq = []
     for sent in sents:
         jq.append(jquery.replace('***', str(sent.id)))
-    return render_to_response('annotator/mysentences.html',
-                              {'sents': sents, 'j':jq},
-                              context_instance=RequestContext(request))
-
-
-
+    return render(request, 'annotator/mysentences.html',
+                              {'sents': sents, 'j':jq})
