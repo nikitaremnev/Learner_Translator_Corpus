@@ -164,30 +164,15 @@
 <div id="masthead">
   <div class="container">
       <div class="row">
-        <div class="col-md-7">
-          <h1 id="top">
+        <div>
+          <h1 id="top" align="center">
           {% block top-name %}
-          {% trans "LTC"%}
+          {% trans "Learner Translator Corpus"%}
+          <br>
+        {% trans "of L2 Russian Speakers"%}
           {% endblock %}
-            <p class="lead">{% trans "Russian Learner Corpus"%}</p>
+
           </h1>
-        </div>
-        <div class="col-md-5">
-
-            <div class="well well-lg">
-              <div class="row">
-                <div class="col-sm-6">
-                    {% block well %}
-        	      	<img src="{% static "img/placeholder.png" %}" class="img-responsive">
-                        {% endblock %}
-                </div>
-
-                <div class="col-sm-6">
-	              	Error of the day
-                </div>
-              </div>
-            </div>
-
         </div>
       </div>
 
@@ -201,7 +186,7 @@
       <!--left-->
       <div class="col-md-3" id="leftCol">
         <ul class="nav nav-stacked" id="sidebar">
-          <li><a href="#sec0">{% trans "About"%}</a></li>
+
         </ul>
       </div><!--/left-->
 
@@ -209,10 +194,7 @@
       <div class="col-md-9">
           <hr id="sec0">
           <h2 >{% trans "About"%}</h2>
-          <p>Corpus of Russian Student Texts (CoRST) is a collection of Russian texts written by students of different universities. Currently, the size of the corpus is about 2.5 million tokens. The texts are annotated in several  ways (metatextual annotation, morphological annotation and error markup), which enables users to perform many types of search in the corpus.</p>
-          <p>The corpus was created on the platform of the Eastern Armenian National Corpus (<a href="http://eanc.net/" target="_blank">EANC</a>); to learn more about how to use the corpus and the search request language, please, consult the <a href="http://eanc.net/en/help/" target="_blank" >help page</a> of EANC.</p>
-          <p>Corpus of Russian Student Texts is a comprehensive reference system intended for researchers, teachers, students, as well as everyone interested in the problems of modern Russian grammar, current processes in lexis, morphology and syntax of modern Russian.</p>
-
+          <p>The Learner Translator Corpus of L2 Russian Speakers (LTC) is a resource which stores students’ translations into the Russian language as their L2. We collect texts from students with different dominant languages from several European universities. Currently available are translations from English, French and Italian. The Corpus enables search by morphological properties and a variety of deviations from Standard Russian.</p>
           <hr id="sec1">
       </div>
     {% endblock content%}
