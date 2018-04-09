@@ -126,8 +126,21 @@ class Search(Index):
             full_path = rePage.sub('', request.get_full_path())
             PREFIX = 'translator_corpus' if PROD else ''
             d_path = full_path.replace(PREFIX + '/search/', PREFIX + '/search/download/')
+            result = sent_dict(sent_list)
             return render(request, 'search/result.html',
-                                      {'query': word, 'result': sent_list, 'pages': sents,
+                                      {'query': word, 'result': result, 'pages': sents,
                                        'numbers': count_data,
                                        'total': res_num, 'total_docs': res_docs,
                                        'path':full_path, 'd_path':d_path, 'j':jq, 'olstart': (page-1)*per_page + 1})
+
+
+def sent_dict(sent_list):
+    sent_dict = {}
+
+    for sent in sent_list:
+        if sent.orig not in sent_dict:
+            sent_dict[sent.orig] = [sent]
+        else:
+            sent_dict[sent.orig].append(sent)
+
+    return sent_dict

@@ -181,8 +181,10 @@ class Document(models.Model):
         u"""Отправляет текст в майстем и раскладывает результат в ячейки базы данных."""
         self.words, text = mystem(self.body_translated)
         self.sentences = len(text)
+        origtext = self.body_original.split('\n')
         super(Document, self).save()
         for sent_id in range(len(text)):
+            OriginalSentence.objects.get_or_create(text=origtext[sent_id], doc_id=self, num=sent_id+1)
             sent, created = Sentence.objects.get_or_create(text=text[sent_id].text, doc_id=self, num=sent_id+1)
             words = text[sent_id].words
             stagged = []
@@ -282,6 +284,28 @@ class Sentence(models.Model):
                 owner = User.objects.get(pk=1)
             arr.append({'owner': owner, 'tag': row[1], 'corr': corr, 'quote': quote, 'comment': comment})
         return arr
+
+
+class OriginalSentence(models.Model):
+    u"""
+    Хранит одно предложение оригинального текста.
+
+    Свойства предложения:
+    text - предложение
+    doc_id - номер текста, к которому относится предложение
+    num - номер предложения в тексте
+    """
+
+    text = models.TextField()
+    doc_id = models.ForeignKey(Document)
+    num = models.IntegerField()
+
+    def __unicode__(self):
+        return self.text
+
+    class Meta:
+        verbose_name = _('sentence')
+        verbose_name_plural = _('sentences')
 
 
 class Annotation(models.Model):

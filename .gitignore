@@ -2,6 +2,7 @@
 .idea/
 .git/
 tempfiles/
+log.txt
 
 # Sensitive stuff
 .secure.settings.json

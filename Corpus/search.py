@@ -33,8 +33,10 @@ class ShowSentence:
             self.hide = True
         self.tagged = self.bold(k.tagged, num)
         self.id = sent_id
-        self.doc_id = k.doc_id
+        self.num = k.num
+        self.doc_id = k.doc_id_id
         self.correct = k.correct
+        self.orig = get_orig_sent(self.doc_id, self.num)
         self.expand = ''
         for i in range(sent_id-expand, sent_id):
             try:
@@ -66,6 +68,19 @@ class ShowSentence:
     @staticmethod
     def empty():
         ShowSentence.sents = []
+
+
+def get_orig_sent(doc_id, num):
+    db = Database()
+
+    req = 'SELECT text FROM `annotator_originalsentence` ' \
+            'WHERE doc_id_id={} AND num={}'.format(doc_id, num)
+    orig_sent = db.execute(req)[0]
+    # fw = open('log.txt', 'w')
+    # fw.write(str(type(orig_sent)))
+    # fw.close()
+
+    return orig_sent[0]
 
 
 class SentBag:
@@ -174,7 +189,8 @@ def get_subcorpus(query):
             req += 'AND '+ one[0]
         else:
             req += 'AND (' + ' OR '.join(one) + ')'
-
+    # with codecs.open('/home/elmira/heritage_corpus/tempfiles/t.txt', 'a', 'utf-8') as f:
+    #     f.write(req)
     db = Database()
     docs = [str(i[0]) for i in db.execute(req)]
     num_docs = Document.objects.count()
@@ -267,13 +283,17 @@ def lex_search(query, docs, flag, expand, page, per_page):
     grams = query.getlist(u'grammar[]')
     errs = query.getlist(u'errors[]')
     comments = query.getlist(u'comment[]')
+    # print query.getlist(u'major'), query.getlist(u'genre')
 
+    # f = codecs.open('/home/elmira/heritage_corpus/tempfiles/s.txt', 'w')
+    # f.write(str(query))
+    # f.close()
     froms = [int(i) for i in query.getlist(u'from[]') if i != '']
     tos = [int(i) for i in query.getlist(u'to[]') if i != '']
     if any(i != '' for i in [words[1], lexis[1], grams[1], errs[1]]):
         return lex_full_search(words, lexis, grams, errs, froms, tos, docs, flag, expand, page, per_page)
     jq = []
-
+    # f = codecs.open('/home/elmira/heritage_corpus/tempfiles/s.txt', 'w')
     wn = 0
     word = words[wn].lower().encode('utf-8')
     lex = lexis[wn].encode('utf-8')
@@ -531,7 +551,8 @@ def collect_data(arr):
         req1 = 'SELECT DISTINCT sent_id' + req_template
         d_req = '''SELECT COUNT(DISTINCT doc_id)''' + req_template
     req1 += ' LIMIT %d,%d;' %((page - 1)*per_page, per_page)
-
+    # with codecs.open('/home/elmira/heritage_corpus/tempfiles/t.txt', 'a', 'utf-8') as f:
+    #     f.write(req1)
     sentences = '(' + ', '.join([str(i[0]) for i in db.execute(req1)]) + ')'
     if sentences == '()':
         return [], 0, 0
@@ -539,7 +560,6 @@ def collect_data(arr):
         req += ' AND document_id IN ' + sentences
     else:
         req += ' AND sent_id IN ' + sentences
-
     rows = db.execute(req)
     sent_num = int(db.execute(n_req)[0][0])
     d_num = int(db.execute(d_req)[0][0])
@@ -558,9 +578,14 @@ def parse_lex(lex):
 
 def parse_gram(gram, t):
     req = ''
-    arr = gram.split(',')
+    if 'allerrors' in gram and t == 'tag':
+        gram = gram.replace('|', ',')
+        arr = gram.split(',')
+        arr = arr[:-1]  # чтобы исключить сам тег "allerrors"
+    else:
+        arr = gram.split(',')
     for gr in arr:
-        one = [t + ' LIKE "%' + i.strip() + '%"' for i in gr.replace(')', '').replace('(', '').split('|')]
+        one = [t + ' REGEXP "((,| |^)' + i.strip() + '($|,| ))"' for i in gr.replace(')', '').replace('(', '').split('|')]
         if len(one) == 1:
             req += 'AND '+ one[0] + ' '
         else:

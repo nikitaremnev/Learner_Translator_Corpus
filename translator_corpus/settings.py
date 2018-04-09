@@ -48,8 +48,9 @@ INSTALLED_APPS = [
     'Corpus'
 ]
 
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
+
+MIDDLEWARE_CLASSES = (
+    'django.middleware.locale.LocaleMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     # 'django.middleware.csrf.CsrfViewMiddleware',
@@ -57,7 +58,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
+)
+
 
 ROOT_URLCONF = 'translator_corpus.urls'
 
@@ -149,6 +151,9 @@ STATICFILES_FINDERS = (
     # 'dajaxice.finders.DajaxiceFinder',
 
 )
+
+
+TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
 
 
 TEMPORARY_FILE_LOCATION = os.path.join(BASE_DIR, 'tempfiles')
