@@ -39,8 +39,8 @@ def mark(request, doc_id):
 
      Функция меняет запись в ячейке базы данных Document.aligned.
     """
-    fw = open('log.txt', 'w')
-    fw.write(str(request.POST))
+    # fw = open('log.txt', 'w')
+    # fw.write(str(request.POST))
     if not request.user.is_authenticated():
         raise PermissionDenied("You do not have permission to perform this action.")
     doc = Document.objects.get(pk=doc_id)
@@ -54,7 +54,7 @@ def mark(request, doc_id):
     elif label == 'unaligned':
         doc.aligned = False
     doc.save()
-    fw.close()
+    # fw.close()
     return redirect('/document-alignment/')
 
 
