@@ -52,7 +52,7 @@ def mark(request, doc_id):
     elif label == 'unannotated':
         doc.annotated = False
     doc.save()
-    return redirect(page)
+    return redirect('/document-annotations/')
 
 
 def get_correction(request, doc_id):

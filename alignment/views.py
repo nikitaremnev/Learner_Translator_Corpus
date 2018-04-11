@@ -31,36 +31,31 @@ def star(request, sent_id, todo):
 
 def mark(request, doc_id):
     """
-    Отмечает текст (не) аннотированным/проверенным/выровненным.
+    Отмечает текст (не) выровненным.
 
     :param request: информация о запросе
     :param doc_id: номер текста в базе данных
     :return: HTTPResponse - перенаправляет на страницу, с которой пришел запрос
 
-     Функция меняет запись в ячейках базы данных Document.annotated, Document.checked
-     и Document.aligned.
+     Функция меняет запись в ячейке базы данных Document.aligned.
     """
+    fw = open('log.txt', 'w')
+    fw.write(str(request.POST))
     if not request.user.is_authenticated():
         raise PermissionDenied("You do not have permission to perform this action.")
     doc = Document.objects.get(pk=doc_id)
     page, label, text = request.POST['next'], request.POST['mark'], request.POST['origtext']
     origtext = text.split('\n')
-    if label == 'checked':
-        doc.checked = True
-    elif label == 'annotated':
-        doc.annotated = True
-    if label == 'unchecked':
-        doc.checked = False
-    elif label == 'unannotated':
-        doc.annotated = False
     if label == 'aligned':
         doc.aligned = True
-        for sent_id in range(len(text)):
-            OriginalSentence.objects.get_or_create(text=origtext[sent_id], doc_id=doc_id, num=sent_id + 1)
+        for sent_id in range(len(origtext)):
+            #fw.write(origtext[sent_id] + '\n')
+            OriginalSentence.objects.get_or_create(text=origtext[sent_id], doc_id=doc, num=sent_id + 1)
     elif label == 'unaligned':
         doc.aligned = False
     doc.save()
-    return redirect(page)
+    fw.close()
+    return redirect('/document-alignment/')
 
 
 def get_correction(request, doc_id):

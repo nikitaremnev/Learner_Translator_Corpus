@@ -164,7 +164,7 @@ $( "#showbutton" ).click(function() {
 </div>
 <div class="col-md-4">
 <div class="panel panel-primary">
-    <div class="panel-heading">{% trans 'aligned, not checked' %}</div>
+    <div class="panel-heading">{% trans 'Aligned' %}</div>
       <div class="panel-body" style="min-height: 450px; max-height: 450px; overflow-y: scroll;"  id="aligned">
           <div>
           <ol>
@@ -181,25 +181,6 @@ $( "#showbutton" ).click(function() {
           </div>
 
       </div>
-</div>
-</div>
-<div class="col-md-4">
-<div class="panel panel-primary">
-    <div class="panel-heading">{% trans 'aligned, checked' %}</div>
-      <div class="panel-body" style="min-height: 450px; max-height: 450px; overflow-y: scroll;"  id="checked">
-          <ol>
-              <!--<li> folder item 21</li>-->
-              <!--</li> folder item 22</li>-->
-                {% for doc in docs %}
-                    {% if  doc.checked %}
-                        <li>
-                            {{ doc.id }}. <a href="{% url 'alignment:align.editor' doc.id %}">{{ doc }} </a>
-                        </li>
-                    {% endif %}
-                {% endfor %}
-            </ol>
-      </div>
-</div>
 </div>
 </div>
 
