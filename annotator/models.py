@@ -54,6 +54,7 @@ class Document(models.Model):
     date_displayed - отображаемая дата
     annotated - размечен ли текст
     checked - проверен ли текст
+    aligned - выравнен ли текст
     """
     # опции для выбора в окне метаразметки
     NativeChoices = ((u'eng', _(u'English')), (u'nor', _(u'Norwegian')), (u'kor', _(u'Korean')),
@@ -140,6 +141,8 @@ class Document(models.Model):
     annotated = models.BooleanField(default=False, verbose_name=_('text is annotated'))
     checked = models.BooleanField(default=False, verbose_name=_('text is checked'))
 
+    aligned = models.BooleanField(default=False, verbose_name=_('text is aligned'))
+
     class Meta:
         verbose_name = _('document')
         verbose_name_plural = _('documents')
@@ -181,10 +184,8 @@ class Document(models.Model):
         u"""Отправляет текст в майстем и раскладывает результат в ячейки базы данных."""
         self.words, text = mystem(self.body_translated)
         self.sentences = len(text)
-        origtext = self.body_original.split('\n')
         super(Document, self).save()
         for sent_id in range(len(text)):
-            OriginalSentence.objects.get_or_create(text=origtext[sent_id], doc_id=self, num=sent_id+1)
             sent, created = Sentence.objects.get_or_create(text=text[sent_id].text, doc_id=self, num=sent_id+1)
             words = text[sent_id].words
             stagged = []

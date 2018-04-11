@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load i18n %}
+{% load annotator_tags %}
+{% block title %}{% trans 'Learner Translator Corpus Alignment' %}{% endblock %}
+{% block meta_content %}{% trans 'Alignment' %}{% endblock %}
+
+{% block scripts %}
+
+
+{% for i in j %}
+     <script>
+    {{ i|safe }}
+    </script>
+    {% endfor %}
+
+{% endblock %}
+    {% block upper-row %}
+            {% endblock %}
+
+    {% block other %}
+
+ <link rel="stylesheet" href="{% static "css/custom-theme/jquery-ui-1.9.2.custom.css" %}" />
+  <script src="{% static "js/jquery-ui-1.9.2.custom.min.js" %}"></script>
+        <style>
+        .ui-autocomplete { position: absolute; cursor: default;z-index:30000 !important;}
+        </style>
+<script type="text/javascript">
+$(document).ready(function(){
+    $(".token[title*='bastard']").css( "text-decoration", "underline" );
+        $('.token').tooltip({
+        placement : 'top',
+        trigger: 'hover',
+          delay: { "show": 500, "hide": 0 },
+          html: true
+      });
+
+});
+ function search(id) {
+$.get("{% url 'annotations:get.correction' '' %}" + id,
+                    function (data) {
+                        $("#"+id+"+").html(data[1]);
+                        $("#second"+id).html(data[0]);
+                    });
+            return false;
+        }
+</script>
+
+    {% endblock %}
+
+{% block content_header %}{% trans 'Align text' %}{% endblock content_header %}
+{% block content %}
+    {% if alert %}
+                  <div class="alert alert-warning alert-dismissible small" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <strong>Warning!</strong>
+</div>
+              {% endif %}
+
+     <div class="col-md-10">
+    {% for doc, sents in data %}
+    <div class="row">
+      <div class="col-md-6">
+          <h2>
+        <span class="lead">{% trans 'Align text' %}:</span> <strong>{{doc}}</strong>
+
+    </h2>
+      </div>
+      <div class="col-md-6">
+      <div class="row">
+          <h2 align="right">
+          <div class="col-md-offset-2 col-md-3">
+              {% if not doc.aligned %}
+              <form action="mark" method="POST">
+              <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+                 <button type="submit" class="btn btn-warning btn-sm" value="aligned" name="mark">
+                  <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+                     <span style="font-size: 80%">{% trans 'Mark as aligned' %}</span>
+                </button>
+              </form></h2>
+      {% endif %}
+      {% if doc.aligned %}
+              <form action="mark" method="POST">
+              <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+                 <button type="submit" class="btn btn-warning btn-sm" value="unaligned" name="mark">
+                  <span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span>
+                     <span style="font-size: 80%">{% trans 'Mark as not aligned' %}</span>
+                </button>
+              </form></h2>
+      {% endif %}
+      </div>
+
+      </div>
+      </div>
+         <br><br>
+<form method="POST" name="origtext">
+    <textarea name="origtext" rows="10" cols="100" value="{{doc.body_original}}">
+        {{doc.body_original}}
+    </textarea>
+</form>
+         <br><br>
+	<div class="row">
+            {% for sent in sents %}
+                <span id="{{ sent.id }}" class="original_sentence" contenteditable="false">
+                    {{sent.tagged|safe|linebreaksbr}}
+                </span><br>
+            {% endfor %}
+    </div>
+{% endfor %}
+
+</div>
+
+    <script>
+$(document).ready(function(){
+    $('[data-toggle="popover"]').tooltip();
+});
+</script>
+{% endblock %}

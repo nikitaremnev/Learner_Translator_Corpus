@@ -30,6 +30,7 @@
         <a href="{% url 'start_page' %} ">{% trans 'Main' %}</a>  |
         <a href="{% url 'main.search' %} ">{% trans 'Search' %}</a> |
         <a href="{% url 'annotations:annotator.root'%} ">{% trans 'Annotate' %}</a> |
+        <a href="{% url 'alignment:align.root'%} ">{% trans 'Align' %}</a> |
             {% block welcome-msg %}
                 {% trans 'Welcome,' %}
                 <strong>{% firstof user.get_short_name user.get_username %}</strong>.

@@ -25,6 +25,7 @@ urlpatterns = [
     url(r'^admin/', learner_admin.urls),
     url(r'^$', start, name='start_page'),
     url(r'^document-annotations/', include('annotator.urls', namespace='annotations')),
+    url(r'^document-alignment/', include('alignment.urls', namespace='alignment')),
     url(r'^search/$', Search.as_view(), name='main.search'),
     url(r'^download_file/(?P<doc_id>[\w\-]+)/(?P<doc_type>ann|tokens|text)$', download_file, name='download_file'),
     url(r'^search/(gramsel|lex|errsel)$', PopUp.as_view(), name='popup'),

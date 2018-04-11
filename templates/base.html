@@ -126,6 +126,7 @@
         </li>
             <li><a href="{% url 'admin:index' %}">{% trans 'Admin panel' %}</a></li>
             <li><a href="{% url 'annotations:annotator.root' %}">{% trans 'Annotate' %}</a></li>
+            <li><a href="{% url 'alignment:align.root'%} ">{% trans 'Align' %}</a></li>
             <li class="dropdown">
 
           <ul class="dropdown-menu" role="menu">
@@ -203,7 +204,7 @@
 
       <footer class="footer">
           <div class="container">
-              <p class="navbar-text navbar-left text-muted">{% block footer %} {% trans "School of Linguistics NRU HSE"%} 2017 <span class="glyphicon glyphicon-copyright-mark" aria-hidden="true"></span>{% endblock footer %}</p>
+              <p class="navbar-text navbar-left text-muted">{% block footer %} {% trans "School of Linguistics NRU HSE"%} 2018 <span class="glyphicon glyphicon-copyright-mark" aria-hidden="true"></span>{% endblock footer %}</p>
           </div>
 
       </footer>
