@@ -17,6 +17,7 @@ from django.contrib.auth.models import User
 from Corpus.db_utils import Database
 from Corpus.search import jquery
 from annotator.models import Document, Annotation, Sentence, Starred, OriginalSentence
+from translator_corpus.settings import PROD
 
 
 def star(request, sent_id, todo):
@@ -55,7 +56,10 @@ def mark(request, doc_id):
         doc.aligned = False
     doc.save()
     # fw.close()
-    return redirect('/document-alignment/')
+    if PROD:
+        return redirect('http://web-corpora.net/translator_corpus/document-alignment/')
+    else:
+        return redirect('/document-alignment/')
 
 
 def get_correction(request, doc_id):

@@ -17,6 +17,7 @@ from django.contrib.auth.models import User
 from Corpus.db_utils import Database
 from Corpus.search import jquery
 from annotator.models import Document, Annotation, Sentence, Starred
+from translator_corpus.settings import PROD
 
 
 def star(request, sent_id, todo):
@@ -52,7 +53,10 @@ def mark(request, doc_id):
     elif label == 'unannotated':
         doc.annotated = False
     doc.save()
-    return redirect('/document-annotations/')
+    if PROD:
+        return redirect('http://web-corpora.net/translator_corpus/document-annotations/')
+    else:
+        return redirect('/document-annotations/')
 
 
 def get_correction(request, doc_id):
