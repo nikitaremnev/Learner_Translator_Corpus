@@ -51,7 +51,8 @@ def mark(request, doc_id):
         doc.aligned = True
         for sent_id in range(len(origtext)):
             #fw.write(origtext[sent_id] + '\n')
-            OriginalSentence.objects.get_or_create(text=origtext[sent_id], doc_id=doc, num=sent_id + 1)
+            doc.body_original = text
+            OriginalSentence.objects.get_or_create(text=origtext[sent_id].strip(), doc_id=doc, num=sent_id + 1)
     elif label == 'unaligned':
         doc.aligned = False
     doc.save()
@@ -261,14 +262,6 @@ class Search(BaseStorageView):
 
 class EditorView2(TemplateView):
     template_name = 'alignment/viewtest.html'
-    jquery = """jQuery(function ($) {
-                $('#***').annotator().annotator('addPlugin', 'Tags').annotator('addPlugin', 'Corr')
-                    .annotator('addPlugin', 'ReadOnlyAnnotations')
-                    .annotator('addPlugin', 'Store', {prefix: '{{storage_api_base_url}}',
-                          annotationData: {'document': ***},
-                          loadFromSearch: {'document': ***}});
-                    });"""
-
 
     def get(self, request, *args, **kwargs):
         if not request.user.is_authenticated():
@@ -281,11 +274,7 @@ class EditorView2(TemplateView):
         context['storage_api_base_url'] = reverse('annotations:annotator.root')[0:-1]  # chop off trailing slash
         d1 = get_object_or_404(Document, id=kwargs['doc_id'])
         s1 = Sentence.objects.filter(doc_id=kwargs['doc_id'])
-        context['j'] = []
-        for sent in s1:
-            context['j'].append(self.jquery.replace('***',
-                                                    str(sent.id)).replace('{{storage_api_base_url}}',
-                                                                          context['storage_api_base_url']))
+
         context['data'] = [(d1,s1)]
         context['doc_id'] = kwargs['doc_id']
         return context

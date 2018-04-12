@@ -127,6 +127,9 @@ class Search(Index):
             PREFIX = 'translator_corpus' if PROD else ''
             d_path = full_path.replace(PREFIX + '/search/', PREFIX + '/search/download/')
             result = sent_dict(sent_list)
+            fw = open('log.txt', 'w')
+            fw.write(str(result))
+            fw.close()
             return render(request, 'search/result.html',
                                       {'query': word, 'result': result, 'pages': sents,
                                        'numbers': count_data,
@@ -138,6 +141,7 @@ def sent_dict(sent_list):
     sent_dict = {}
 
     for sent in sent_list:
+        sent.orig = sent.orig.strip('\u2018\u2019\n \r ')
         if sent.orig not in sent_dict:
             sent_dict[sent.orig] = [sent]
         else:

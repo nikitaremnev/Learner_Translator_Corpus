@@ -3,6 +3,7 @@
 .git/
 tempfiles/
 log.txt
+try.py
 
 # Sensitive stuff
 .secure.settings.json

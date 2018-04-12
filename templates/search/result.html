@@ -101,8 +101,8 @@ $.get("/translator_corpus/document-annotations/get_correction_by_id/"+id,
             {% for sent in sents %}
             <div>
                 <div>
-                    <span class="doctitle">{{ sent.doc_id }} | {{ sent.doc_id.native }} | {{ sent.doc_id.language_background }} | {{ sent.doc_id.date_displayed }}</span>
-                    {% if request.user.is_authenticated %}#<a target="_blank" href="{% url 'annotations:annotation.editor' sent.doc_id.id %}">{{ sent.doc_id.id }}</a>
+                    <span class="doctitle">{{ sent.doc_id }} | {{ sent.doc.native }} | {{ sent.doc.language_background }} | {{ sent.doc.date_displayed }}</span>
+                    {% if request.user.is_authenticated %}#<a target="_blank" href="{% url 'annotations:annotation.editor' sent.doc_id.id %}">{{ sent.doc.id }}</a>
     {#                <span class="stars" name="{{ sent.id }}" do="add" style="float: right"><span class="glyphicon glyphicon-star-empty" aria-hidden="true" title="Добавить в избранное"></span></span>#}
                     {% endif %}
                 </div>
@@ -137,7 +137,7 @@ $.get("/translator_corpus/document-annotations/get_correction_by_id/"+id,
                       <div class="row">
                           <div class="col-sm-12">
                           <p>{{sent.expand|safe|linebreaksbr}}</p>
-                              <p>[{{ sent.doc_id.author }}, {{ sent.doc_id.gender }}, {{ sent.doc_id.language_background }}, {{ sent.doc_id.native }}, {{ sent.doc_id.date_displayed }}]</p>
+                              <p>[{{ sent.doc.author }}, {{ sent.doc.gender }}, {{ sent.doc.language_background }}, {{ sent.doc.native }}, {{ sent.doc.date_displayed }}]</p>
                           </div>
                       </div>
                   </div>

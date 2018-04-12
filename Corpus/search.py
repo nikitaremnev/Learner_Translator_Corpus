@@ -35,6 +35,7 @@ class ShowSentence:
         self.id = sent_id
         self.num = k.num
         self.doc_id = k.doc_id_id
+        self.doc = Document.objects.get(pk=self.doc_id)
         self.correct = k.correct
         self.orig = get_orig_sent(self.doc_id, self.num)
         self.expand = ''
@@ -75,10 +76,11 @@ def get_orig_sent(doc_id, num):
 
     req = 'SELECT text FROM `annotator_originalsentence` ' \
             'WHERE doc_id_id={} AND num={}'.format(doc_id, num)
-    orig_sent = db.execute(req)[0]
     # fw = open('log.txt', 'w')
-    # fw.write(str(type(orig_sent)))
+    # fw.write(str(req))
     # fw.close()
+    orig_sent = db.execute(req)[0]
+
 
     return orig_sent[0]
 
@@ -144,7 +146,7 @@ class Sent:
 
 
 def get_subcorpus(query):
-    req = 'SELECT id FROM `annotator_document` WHERE 1 ' # AND subcorpus NOT LIKE "hidden"
+    req = 'SELECT id FROM `annotator_document` WHERE aligned="1" ' # AND subcorpus NOT LIKE "hidden"
     if u'rulec' in query:
         req += 'AND subcorpus="RULEC" '
     mode = query.get(u'mode').encode('utf-8')
