@@ -21,6 +21,38 @@ regToken= re.compile('">(.*?)</span>', flags=re.U | re.DOTALL)
 regSpans = re.compile('[.?,!:«(;#№–/...)»-]*<span .*?</span>[.?,!:«(;#№–/...)»-]*', flags=re.U | re.DOTALL)
 
 
+class ShowSentence1:
+    sents = []
+
+    def __init__(self, doc_id, num, expand):
+        k = Sentence.objects.get(doc_id_id=doc_id, num=num)
+        if k.text not in ShowSentence.sents:
+            ShowSentence.sents.append(k.text)
+            self.hide = False
+        else:
+            self.hide = True
+        self.text = k.text
+        self.id = k.id
+        self.num = k.num
+        self.doc_id = k.doc_id_id
+        self.doc = Document.objects.get(pk=self.doc_id)
+        self.correct = k.correct
+        self.orig = get_orig_sent(self.doc_id, self.num)
+        self.expand = ''
+        for i in range(self.id-expand, self.id):
+            try:
+                sent = Sentence.objects.get(doc_id_id=doc_id, num=i)
+                self.expand += sent.text + ' '
+            except:
+                pass
+        self.expand += self.text + ' '
+        for i in range(self.id+1, self.id+expand+1):
+            try:
+                sent = Sentence.objects.get(doc_id_id=doc_id, num=i)
+                self.expand += sent.text + ' '
+            except:
+                pass
+
 class ShowSentence:
     sents = []
 
@@ -55,15 +87,18 @@ class ShowSentence:
 
     def bold(self, tagged, num):
         s = regSpans.findall(tagged)
-        for i in num:
-            try:
-                s[i-1] = regToken.sub('"><b>\\1</b></span>', s[i-1])
-            except:
-                pass  #todo find the bug here
-                # with codecs.open('s.txt', 'w', encoding='utf-8') as f:
-                #     f.write(' '.join(str(ciph) for ciph in num))
-                #     f.write('\r\n')
-                #     f.write(tagged)
+        try:
+            for i in num:
+                try:
+                    s[i-1] = regToken.sub('"><b>\\1</b></span>', s[i-1])
+                except:
+                    pass  #todo find the bug here
+                    # with codecs.open('s.txt', 'w', encoding='utf-8') as f:
+                    #     f.write(' '.join(str(ciph) for ciph in num))
+                    #     f.write('\r\n')
+                    #     f.write(tagged)
+        except:
+            pass
         return ' '.join(s)
 
     @staticmethod
@@ -245,6 +280,84 @@ def exact_search(word, docs, flag, expand, page, per_page):
     for sent in sent_list:
         jq.append(jquery.replace('***', str(sent.id)))
     return jq, sent_list, word, docs_len, sent_num
+
+
+def orig_exact_search(word, docs, flag, expand, page, per_page):
+    db = Database()
+    s = word
+    words = word.split(' ')
+    jq = []
+    a = {}
+    for wn in range(len(words)):
+        w = words[wn]
+        req4 = 'SELECT doc_id_id, num, text FROM `annotator_originalsentence` WHERE text REGEXP "'+ w +'" '
+        if flag:
+            req4 += 'AND doc_id_id IN ('+','.join(docs) + ')'
+        rows = db.execute(req4)
+        w = open('l.txt', 'a')
+        w.write('\n')
+        w.write(str(rows))
+        w.close()
+        sent_list = {}
+
+        if rows:
+            for sent in rows:
+                # req5 = 'SELECT text FROM `annotator_sentence` WHERE doc_id_id="' + str(sent[0]) + '"AND num="' + str(sent[1]) + '" '
+                # sents = db.execute(req5)
+
+                # for s in sents:
+                    # sent_list[sent] = s[0].encode('utf-8')
+                sent_list[sent] = ShowSentence1(sent[0], sent[1], expand)
+                # print(sent[0], sent[1], sent_list[sent].text)
+            ShowSentence.empty()
+    # w = open('l.txt', 'a')
+    # w.write('\n')
+    # w.write(str(sent_list))
+    # w.close()
+    # sent_list = [ShowSentence(i, a[i], expand) for i in sorted(a)]
+    # ShowSentence.empty()
+    sent_num = len(sent_list)
+    d_num = len(set(sent[0] for sent in sent_list))
+    # sent_list = sorted(sent_list, key=lambda i: i[0])[per_page*(page-1):per_page*page]
+    for sent in sent_list:
+        jq.append(jquery.replace('***', str(sent[1])))
+
+    # w = open('l.txt', 'a')
+    # w.write('\n')
+    # w.write(str(a))
+    # w.close()
+    return jq, sent_list, s, d_num, sent_num
+
+    # db = Database()
+    # word = word.split()[0]
+    # req1 = 'SELECT COUNT(DISTINCT doc_id) FROM `annotator_originalsentence` WHERE text LIKE "'+word + '" '
+    # if flag:
+    #     req1 += 'AND doc_id_id IN ('+','.join(docs) + ');'
+    # docs_len = int(db.execute(req1)[0][0])
+    # n_req = 'SELECT COUNT(DISTINCT id) FROM `annotator_originalsentence` WHERE text LIKE "'+ word +'" '
+    # if flag:
+    #     n_req += 'AND doc_id_id IN ('+','.join(docs) + ');'
+    # sent_num = int(db.execute(n_req)[0][0])
+    # req2 = 'SELECT DISTINCT id FROM `annotator_originalsentence` WHERE text LIKE "'+ word +'" '
+    # if flag:
+    #     req2 += 'AND doc_id_id IN ('+','.join(docs) + ')'
+    # req2 += ' LIMIT %d,%d;' %((page - 1)*per_page, per_page)
+    # sentences = '(' + ', '.join([str(i[0]) for i in db.execute(req2)]) + ')'
+    # if sentences != '()':
+    #     req3 = 'SELECT sent_id, num FROM `annotator_token` WHERE token="'+ word +'" AND sent_id IN ' + sentences
+    #     tokens = db.execute(req3)
+    # else:
+    #     tokens = []
+    # # tokens = Token.objects.filter(token__exact=word)
+    # e = defaultdict(list)
+    # for i, j in tokens:
+    #     e[i].append(j)
+    # jq = []
+    # sent_list = [ShowSentence(i, e[i], expand) for i in sorted(e)]
+    # ShowSentence.empty()
+    # for sent in sent_list:
+    #     jq.append(jquery.replace('***', str(sent.id)))
+    # return jq, sent_list, word, docs_len, sent_num
 
 
 def exact_full_search(word, docs, flag, expand, page, per_page):

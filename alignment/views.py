@@ -19,6 +19,8 @@ from Corpus.search import jquery
 from annotator.models import Document, Annotation, Sentence, Starred, OriginalSentence
 from translator_corpus.settings import PROD
 
+import nltk
+
 
 def star(request, sent_id, todo):
     sent = Sentence.objects.get(pk=sent_id)
@@ -274,6 +276,11 @@ class EditorView2(TemplateView):
         context['storage_api_base_url'] = reverse('annotations:annotator.root')[0:-1]  # chop off trailing slash
         d1 = get_object_or_404(Document, id=kwargs['doc_id'])
         s1 = Sentence.objects.filter(doc_id=kwargs['doc_id'])
+        if d1.aligned == False:
+            orig_text = d1.body_original
+            orig_sents = nltk.sent_tokenize(orig_text)
+            orig_sents1 = [s.strip() for s in orig_sents]
+            d1.body_original = '\n'.join(orig_sents1)
 
         context['data'] = [(d1,s1)]
         context['doc_id'] = kwargs['doc_id']

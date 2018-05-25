@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load i18n %}
+{% load annotator_tags %}
+{% block title %}{% trans 'Learner Translator Corpus Result' %}{% endblock %}
+{% block meta_content %}{% trans 'Result' %}{% endblock %}
+
+{% block scripts %}
+{% for i in j %}
+     <script>
+    {{ i|safe }}
+    </script>
+{% endfor %}
+{% endblock %}
+
+{% block upper-row %}{% endblock %}
+
+{% block other %}
+    <script type="text/javascript">
+    $(document).ready(function(){
+      $('.token').tooltip({
+        placement : 'top',
+        trigger: 'hover',
+          delay: { "show": 500, "hide": 0 },
+          html: true
+      });
+        $('[data-toggle="tooltip"]').tooltip(
+            {"trigger": 'click', "placement":'auto'}
+    );
+
+        $(".duplicate_sents" ).click(function() {
+  var id = $( this ).attr('name');
+    $("#hidden"+id).toggle();
+});
+    });
+     function search(id) {
+$.get("/translator_corpus/document-annotations/get_correction_by_id/"+id,
+                    function (data) {
+                        $("#"+id+"+").html(data[1]);
+                        $("#second"+id).html(data[0]);
+                    });
+            return false;
+        }
+    </script>
+ <link rel="stylesheet" href="{% static "css/custom-theme/jquery-ui-1.9.2.custom.css" %}" />
+  <script src="{% static "js/jquery-ui-1.9.2.custom.min.js" %}"></script>
+        <style>
+        .ui-autocomplete { position: absolute; cursor: default;z-index:30000 !important;}
+        </style>
+
+{% endblock %}
+
+
+{% block content_header %}{% trans 'Result' %}{% endblock content_header %}
+
+{% block content %}
+     <h3>
+         <span>{{ query|safe|linebreaksbr }}</span>
+     </h3>
+     <h4>
+         <span  class="label label-default">{% trans 'Corpus total' %}: {{ numbers.total_docs }} {% trans 'documents' %}, {{ numbers.total_sents }} {% trans 'sentences' %}, {{ numbers.total_tokens }} {% trans 'words' %}.</span>
+     </h4>
+    <h4>
+        <span  class="label label-default">{% trans 'Search executed in a user-defined subcorpus of' %} {{ numbers.subcorpus_docs }} {% trans 'documents' %}, {{ numbers.subcorpus_sents }} {% trans 'sentences' %}, {{ numbers.subcorpus_words }} {% trans 'words' %}.</span>
+    </h4>
+    <h4>
+        <span  class="label label-default">{% trans 'Found' %}: {{ total_docs }} {% trans 'documents' %}, {{ total }} {% trans 'contexts' %}.</span>
+    </h4>
+
+    <nav>
+        <ul class="pagination pagination-sm">
+       {% if pages.has_previous %}
+       <li>
+          <a href="{{ path }}&page={{ pages.previous_page_number }}" aria-label="Previous">
+            <span aria-hidden="true">{% trans 'previous page' %}</span>
+          </a>
+       </li>
+        {% endif %}
+        {% for i in pages.paginator.page_range2 %}
+        <li {% if pages.number == i %} class="active" {% endif %}>
+            <a href="{{ path }}&page={{ i }}">{{ i }}</a>
+        </li>
+        {% endfor %}
+        {% if pages.has_next %}
+        <li>
+          <a href="{{ path }}&page={{ pages.next_page_number }}" aria-label="Next">
+            <span aria-hidden="true">{% trans 'next page' %}</span>
+          </a>
+        </li>
+        {% endif %}
+
+  </ul>
+    </nav>
+
+    <ol start="{{olstart}}">
+    {% for orig, sent in result.items %}
+        <li>
+            <span contenteditable="false">
+                {{orig.2|safe|linebreaksbr}}
+            </span>
+            <div>
+            <div>
+                <div>
+                    <span class="doctitle">{{ sent.doc_id }} | {{ sent.doc.native }} | {{ sent.doc.language_background }} | {{ sent.doc.date_displayed }}</span>
+                    {% if request.user.is_authenticated %}#<a target="_blank" href="{% url 'annotations:annotation.editor' sent.doc_id.id %}">{{ sent.doc.id }}</a>
+    {#                <span class="stars" name="{{ sent.id }}" do="add" style="float: right"><span class="glyphicon glyphicon-star-empty" aria-hidden="true" title="Добавить в избранное"></span></span>#}
+                    {% endif %}
+                </div>
+                    <span id="{{ sent.id }}" contenteditable="false">
+                        {{sent.text|safe|linebreaksbr}}
+                        <button type="button" class="btn btn-xs" data-toggle="modal" data-target="#{{ sent.id }}expand">
+                            <-...->
+                        </button>
+              <div>
+        </li>
+	{% endfor %}
+    </ol>
+
+    {% for orig, sent in result.items %}
+            <div class="modal fade" id="{{ sent.id }}expand" tabindex="-1" role="dialog" aria-labelledby="expandLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="expandLabel">{{ sent.doc_id }}</h4>
+                  </div>
+                  <div class="modal-body">
+
+                      <div class="row">
+                          <div class="col-sm-12">
+                          <p>{{sent.expand|safe|linebreaksbr}}</p>
+                              <p>[{{ sent.doc.author }}, {{ sent.doc.gender }}, {{ sent.doc.language_background }}, {{ sent.doc.native }}, {{ sent.doc.date_displayed }}]</p>
+                          </div>
+                      </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+    {% endfor %}
+
+    <nav>
+        <ul class="pagination pagination-sm">
+       {% if pages.has_previous %}
+       <li>
+          <a href="{{ path }}&page={{ pages.previous_page_number }}" aria-label="Previous">
+            <span aria-hidden="true">{% trans 'previous page' %}</span>
+          </a>
+       </li>
+        {% endif %}
+        {% for i in pages.paginator.page_range2 %}
+        <li {% if pages.number == i %} class="active" {% endif %}>
+            <a href="{{ path }}&page={{ i }}">{{ i }}</a>
+        </li>
+        {% endfor %}
+        {% if pages.has_next %}
+        <li>
+          <a href="{{ path }}&page={{ pages.next_page_number }}" aria-label="Next">
+            <span aria-hidden="true">{% trans 'next page' %}</span>
+          </a>
+        </li>
+        {% endif %}
+
+  </ul>
+
+    </nav>
+
+{% endblock content %}
+

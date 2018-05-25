@@ -95,6 +95,8 @@ $( document ).ready(function() {
 
     <!--</form>-->
         </div>
+
+
         <div class="col-sm-6">
                 <div class="row">
         	      	    <div class="btn-group pull-right">
@@ -109,8 +111,21 @@ $( document ).ready(function() {
 {#        </div>#}
             {% endblock %}
 
+
 {% block content %}
     <div class="container">
+                <div class="row">
+          <h4>{% trans "Exact search in source texts" %}</h4>
+
+        <label>
+            <input class="form-control input-sm" type="text" name="orig_word" placeholder="{% trans "Input key words: " %}" size="75%">
+        </label>
+        <p id="search"><input type="submit" class="btn btn-xs btn-default" name="orig_search" value="{% trans "Search" %}"></p>
+
+            <!--</form>-->
+        </div>
+
+
 <div class="row">
     <h4>{% trans "Lexico-grammatical search" %}</h4>
     <div class="controls" id="controls">
@@ -194,6 +209,7 @@ $( document ).ready(function() {
         </div>
      <input id="search" type="submit" class="btn btn-xs btn-default" name="lex_search" value="{% trans "Search" %}" />
     </div>
+
 
 <div class="modal fade" id="subcorpus" tabindex="-1" role="dialog" aria-labelledby="subcorpusLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
@@ -379,13 +395,16 @@ $( document ).ready(function() {
           <div class="col-xs-6 text-left">
               <div class="checkbox"><label><input type="checkbox" name="rulec" value="">{% trans "Search only in RULEC" %}</label></div>
           </div>
+
           <div class="col-xs-6">
               <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
           </div>
       </div>
 </div>
     </div>
+
   </div>
+
 
 <div class="modal fade" id="preferences" tabindex="-1" role="dialog" aria-labelledby="prefsLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -440,6 +459,7 @@ $( document ).ready(function() {
 {#                </select>#}
 {#            </div>#}
 {#          </div>#}
+
 
       </div>
       <div class="modal-footer">

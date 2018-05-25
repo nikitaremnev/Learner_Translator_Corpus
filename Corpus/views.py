@@ -90,6 +90,7 @@ class Search(Index):
             # print request.GET
             # u_groups = request.user.groups
             query = request.GET
+            # print(query)
             subcorpus, subcorpus_sents, subcorpus_words, flag = get_subcorpus(query) #, u_groups)
             # print subcorpus.count()
             # subcorpus_sents = [sent.id for doc in subcorpus[0] for sent in doc.sentence_set.all()]
@@ -105,6 +106,8 @@ class Search(Index):
             expand = int(query.get(u'expand')[-1])
             if "exact_search" in query:
                 jq, sent_list, word, res_docs, res_num = exact_full_search(request.GET["exact_word"].lower().encode('utf-8'), subcorpus, flag, expand, page, per_page)
+            elif "orig_search" in query:
+                jq, sent_list, word, res_docs, res_num = orig_exact_search(request.GET["orig_word"].lower().encode('utf-8'), subcorpus, flag, expand, page, per_page)
 
             else:
                 # todo rewrite this part of search
@@ -126,15 +129,24 @@ class Search(Index):
             full_path = rePage.sub('', request.get_full_path())
             PREFIX = 'translator_corpus' if PROD else ''
             d_path = full_path.replace(PREFIX + '/search/', PREFIX + '/search/download/')
-            result = sent_dict(sent_list)
-            fw = open('log.txt', 'w')
-            fw.write(str(result))
-            fw.close()
-            return render(request, 'search/result.html',
-                                      {'query': word, 'result': result, 'pages': sents,
-                                       'numbers': count_data,
-                                       'total': res_num, 'total_docs': res_docs,
-                                       'path':full_path, 'd_path':d_path, 'j':jq, 'olstart': (page-1)*per_page + 1})
+            if not "orig_search" in query:
+                result = sent_dict(sent_list)
+                return render(request, 'search/result.html',
+                                          {'query': word, 'result': result, 'pages': sents,
+                                           'numbers': count_data,
+                                           'total': res_num, 'total_docs': res_docs,
+                                           'path':full_path, 'd_path':d_path, 'j':jq, 'olstart': (page-1)*per_page + 1})
+            else:
+                # fw = open('log.txt', 'w')
+                # fw.write(str(sent_list))
+                # fw.close()
+                # for k in sent_list:
+                #     print(sent_list[k].text)
+                return render(request, 'search/result_orig.html',
+                                          {'query': word, 'result': sent_list, 'pages': sents,
+                                           'numbers': count_data,
+                                           'total': res_num, 'total_docs': res_docs,
+                                           'path':full_path, 'd_path':d_path, 'j':jq, 'olstart': (page-1)*per_page + 1})
 
 
 def sent_dict(sent_list):
