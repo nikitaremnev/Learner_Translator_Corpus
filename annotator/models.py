@@ -64,8 +64,15 @@ class Document(models.Model):
                      (u'chi', _(u'Chinese')),
                      (u'kaz', _(u'Kazakh')),
                      (u'dut', _(u'Dutch')),
-                     (u'swe', _(u'Swedish'))
+                     (u'swe', _(u'Swedish')),
+                     (u'cze', _(u'Czech')),
+                     (u'est', _(u'Estonian')),
+                     (u'por', _(u'Portuguese')),
+                     (u'fin', _(u'Finnish')),
+                     (u'dag', _(u'Dagestanian'))
                      )
+
+
     ModeChoices = ((u'п', _(u'written')), (u'у', _(u'oral')))
     GenderChoices = ((u'ж', _(u'female')), (u'м', _(u'male')))
     TimeChoices = ((u'limited', _(u'limited')), (u'unlimited', _(u'unlimited')))
