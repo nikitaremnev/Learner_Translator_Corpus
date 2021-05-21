@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '+_yb%x2pot4h7oeki0q(ph)ytm_xprzr5g6#hp4*%r9ebu^ku1'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # Identifies whether the code is running in prod
 PROD = '/home/esokur' in BASE_DIR
